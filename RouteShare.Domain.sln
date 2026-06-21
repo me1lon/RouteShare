@@ -1,11 +1,16 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35931.197 d17.13
+VisualStudioVersion = 17.13.35931.197
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RouteShare.Domain", "RouteShare.Domain\RouteShare.Domain.csproj", "{EDE84509-6571-4813-AABD-E07EB7BC3F1D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RouteShare.Tests", "RouteShare.Tests\RouteShare.Tests.csproj", "{476528A7-2F72-4598-BC4D-34FF3355CA8F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RouteShare.UI", "RouteShare.UI\RouteShare.UI.csproj", "{EB0848E2-9952-412F-9D28-F7C9EBAA344C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{EDE84509-6571-4813-AABD-E07EB7BC3F1D} = {EDE84509-6571-4813-AABD-E07EB7BC3F1D}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +26,10 @@ Global
 		{476528A7-2F72-4598-BC4D-34FF3355CA8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{476528A7-2F72-4598-BC4D-34FF3355CA8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{476528A7-2F72-4598-BC4D-34FF3355CA8F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB0848E2-9952-412F-9D28-F7C9EBAA344C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB0848E2-9952-412F-9D28-F7C9EBAA344C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB0848E2-9952-412F-9D28-F7C9EBAA344C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB0848E2-9952-412F-9D28-F7C9EBAA344C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
