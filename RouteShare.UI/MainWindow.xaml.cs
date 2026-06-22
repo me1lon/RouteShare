@@ -1,11 +1,13 @@
-﻿namespace RouteShare.UI
+﻿using System.Windows;
+
+namespace RouteShare.UI
 {
-    public partial class MainWindow : System.Windows.Window
+    public partial class MainWindow : Window
     {
         public MainWindow()
         {
             InitializeComponent();
-            MainFrame.Navigate(new AdminPanelPage());
+            MainFrame.Navigate(new MainPage());
         }
     }
 }

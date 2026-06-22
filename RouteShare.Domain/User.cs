@@ -2,12 +2,13 @@
 {
     public abstract class User
     {
+        public string Name { get; set; }
         public string Email { get; set; }
-        protected string Password { get; set; }
+        public string Password { get; set; }
 
         public bool Login(string email, string password)
         {
-            return true;
+            return Email == email && Password == password;
         }
     }
 }

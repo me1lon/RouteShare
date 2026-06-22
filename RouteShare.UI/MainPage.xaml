@@ -11,22 +11,45 @@
 
         <Border BorderBrush="#E0E0E0" BorderThickness="0,0,0,1">
             <Grid Margin="40,0">
-                <TextBlock Text="RouteShare" FontSize="22" FontWeight="SemiBold" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="#333333"/>
+                <Button Content="RouteShare" Click="FindTrip_Click" Background="Transparent" BorderThickness="0" FontSize="22" FontWeight="SemiBold" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="#333333" Padding="0" Cursor="Hand"/>
+
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
                     <Border BorderBrush="#CCCCCC" BorderThickness="1" CornerRadius="15" Margin="0,0,10,0">
-                        <Button Content="Знайти поїздку" Background="Transparent" BorderThickness="0" Padding="15,8" Foreground="#555555"/>
+                        <Button Content="Знайти поїздку" Click="FindTrip_Click" Background="Transparent" BorderThickness="0" Padding="15,8" Foreground="#555555"/>
                     </Border>
                     <Border BorderBrush="#CCCCCC" BorderThickness="1" CornerRadius="15">
-                        <Button Content="Управління поїздками" Background="Transparent" BorderThickness="0" Padding="15,8" Foreground="#555555"/>
+                        <Button Content="Управління поїздками" Click="ManageTrips_Click" Background="Transparent" BorderThickness="0" Padding="15,8" Foreground="#555555"/>
                     </Border>
                 </StackPanel>
-                <TextBlock Text="👤" FontSize="28" VerticalAlignment="Center" HorizontalAlignment="Right" Foreground="#333333"/>
+
+                <Grid HorizontalAlignment="Right" VerticalAlignment="Center">
+                    <Border x:Name="UnauthHeader" BorderBrush="#CCCCCC" BorderThickness="1" CornerRadius="15" Visibility="Visible">
+                        <Button Content="Увійти" Click="LoginNav_Click" Background="Transparent" BorderThickness="0" Padding="15,8" Foreground="#555555"/>
+                    </Border>
+
+                    <StackPanel x:Name="AuthHeader" Orientation="Horizontal" Visibility="Collapsed">
+                        <Border BorderBrush="#CCCCCC" BorderThickness="1" CornerRadius="15" Margin="0,0,15,0">
+                            <Button Content="Адмін" Click="Profile_Click" Background="Transparent" BorderThickness="0" Padding="15,8" Foreground="#555555"/>
+                        </Border>
+                        <Button Click="ProfileDropdown_Click" Background="Transparent" BorderThickness="0" Padding="0" Cursor="Hand">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Text="👤" FontSize="28" Foreground="#333333" Margin="0,0,5,0"/>
+                                <TextBlock Text="▼" FontSize="12" Foreground="#333333" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+
+                    <Popup x:Name="LogoutPopup" Placement="Bottom" StaysOpen="False" AllowsTransparency="True" Margin="0,10,0,0">
+                        <Border Background="White" BorderBrush="#CCCCCC" BorderThickness="1" CornerRadius="10" Padding="5">
+                            <Button Content="Вийти" Click="Logout_Click" Background="#E6E6E6" BorderThickness="0" Padding="15,8" Foreground="#333333"/>
+                        </Border>
+                    </Popup>
+                </Grid>
             </Grid>
         </Border>
 
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
             <StackPanel MaxWidth="1000" Margin="40,30,40,50">
-
                 <Border BorderBrush="#CCCCCC" BorderThickness="1" CornerRadius="10" Height="60" Margin="0,0,0,30">
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -36,141 +59,65 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="150"/>
                         </Grid.ColumnDefinitions>
-
-                        <TextBox Text="Виїжджаєте з" Grid.Column="0" VerticalAlignment="Center" BorderThickness="0" Background="Transparent" Foreground="#333333" FontSize="16" Padding="15,0"/>
-
+                        <TextBox x:Name="SearchDeparture" Text="Виїжджає з" Tag="Виїжджає з" GotFocus="RemoveText" LostFocus="AddText" Grid.Column="0" VerticalAlignment="Center" BorderThickness="0" Background="Transparent" Foreground="#888888" FontSize="16" Padding="15,0"/>
                         <Border Grid.Column="1" BorderBrush="#CCCCCC" BorderThickness="1,0,0,0">
-                            <TextBox Text="Прямуєте до" VerticalAlignment="Center" BorderThickness="0" Background="Transparent" Foreground="#333333" FontSize="16" Padding="15,0"/>
+                            <TextBox x:Name="SearchArrival" Text="Прямує до" Tag="Прямує до" GotFocus="RemoveText" LostFocus="AddText" VerticalAlignment="Center" BorderThickness="0" Background="Transparent" Foreground="#888888" FontSize="16" Padding="15,0"/>
                         </Border>
-
                         <Border Grid.Column="2" BorderBrush="#CCCCCC" BorderThickness="1,0,0,0">
-                            <TextBox Text="Сьогодні" VerticalAlignment="Center" BorderThickness="0" Background="Transparent" Foreground="#333333" FontSize="16" Padding="15,0"/>
+                            <TextBox x:Name="SearchDate" Text="дд.мм.рррр" Tag="дд.мм.рррр" GotFocus="RemoveText" LostFocus="AddText" VerticalAlignment="Center" BorderThickness="0" Background="Transparent" Foreground="#888888" FontSize="16" Padding="15,0"/>
                         </Border>
-
                         <Border Grid.Column="3" BorderBrush="#CCCCCC" BorderThickness="1,0,0,0">
-                            <TextBox Text="1 пасажир" VerticalAlignment="Center" BorderThickness="0" Background="Transparent" Foreground="#333333" FontSize="16" Padding="15,0"/>
+                            <TextBox x:Name="SearchSeats" Text="1" Tag="1" GotFocus="RemoveText" LostFocus="AddText" VerticalAlignment="Center" BorderThickness="0" Background="Transparent" Foreground="#888888" FontSize="16" Padding="15,0"/>
                         </Border>
-
                         <Border Grid.Column="4" BorderBrush="#CCCCCC" BorderThickness="1,0,0,0" Background="#E6E6E6" CornerRadius="0,10,10,0">
-                            <Button Content="Шукати" Background="Transparent" BorderThickness="0" FontSize="16" Foreground="#333333"/>
+                            <Button Content="Шукати" Click="Search_Click" Background="Transparent" BorderThickness="0" FontSize="16" Foreground="#333333"/>
                         </Border>
                     </Grid>
                 </Border>
 
-                <Border BorderBrush="#CCCCCC" BorderThickness="1" CornerRadius="10" Padding="25" Margin="0,0,0,15">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
+                <ItemsControl x:Name="SearchResultsList">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border BorderBrush="#CCCCCC" BorderThickness="1" CornerRadius="10" Padding="25" Margin="0,0,0,15">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
 
-                        <Grid Grid.Column="0" HorizontalAlignment="Left">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
+                                    <Grid Grid.Column="0" HorizontalAlignment="Left">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
 
-                            <TextBlock Text="14:00" Grid.Row="0" Grid.Column="0" FontSize="16" FontWeight="SemiBold" Foreground="#333333" Margin="0,0,0,10"/>
-                            <TextBlock Text="- - - - - - - - - - - - - - -" Grid.Row="0" Grid.Column="1" Foreground="#AAAAAA" VerticalAlignment="Center" Margin="15,0,15,10"/>
-                            <TextBlock Text="19:00" Grid.Row="0" Grid.Column="2" FontSize="16" FontWeight="SemiBold" Foreground="#333333" Margin="0,0,0,10"/>
+                                        <TextBlock Text="{Binding Date, StringFormat=\{0:HH:mm\}}" Grid.Row="0" Grid.Column="0" FontSize="16" FontWeight="SemiBold" Foreground="#333333" Margin="0,0,0,10"/>
+                                        <TextBlock Text="- - - - - - - - - - - - - - -" Grid.Row="0" Grid.Column="1" Foreground="#AAAAAA" VerticalAlignment="Center" Margin="15,0,15,10"/>
+                                        <TextBlock Text="{Binding ArrivalDate, StringFormat=\{0:HH:mm\}}" Grid.Row="0" Grid.Column="2" FontSize="16" FontWeight="SemiBold" Foreground="#333333" Margin="0,0,0,10"/>
 
-                            <TextBlock Text="Будапешт" Grid.Row="1" Grid.Column="0" FontSize="14" Foreground="#777777"/>
-                            <TextBlock Text="Прага" Grid.Row="1" Grid.Column="2" FontSize="14" Foreground="#777777"/>
-                        </Grid>
+                                        <TextBlock Text="{Binding DepartureCity}" Grid.Row="1" Grid.Column="0" FontSize="14" Foreground="#777777"/>
+                                        <TextBlock Text="{Binding ArrivalCity}" Grid.Row="1" Grid.Column="2" FontSize="14" Foreground="#777777"/>
+                                    </Grid>
 
-                        <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="0,0,40,0">
-                            <TextBlock Text="1200 грн" FontSize="22" FontWeight="Bold" Foreground="#333333" HorizontalAlignment="Right" Margin="0,0,0,5"/>
-                            <TextBlock Text="4 місця залишилось" FontSize="14" Foreground="#777777" HorizontalAlignment="Right"/>
-                        </StackPanel>
+                                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="0,0,40,0">
+                                        <TextBlock Text="{Binding Price, StringFormat=\{0\} грн}" FontSize="22" FontWeight="Bold" Foreground="#333333" HorizontalAlignment="Right" Margin="0,0,0,5"/>
+                                        <TextBlock Text="{Binding Seats, StringFormat=\{0\} місця залишилось}" FontSize="14" Foreground="#777777" HorizontalAlignment="Right"/>
+                                    </StackPanel>
 
-                        <Border Grid.Column="2" Background="#E6E6E6" CornerRadius="10" Width="150" Height="50" VerticalAlignment="Center">
-                            <Button Content="Забронювати" Background="Transparent" BorderThickness="0" FontSize="16" Foreground="#333333"/>
-                        </Border>
-                    </Grid>
-                </Border>
-
-                <Border BorderBrush="#CCCCCC" BorderThickness="1" CornerRadius="10" Padding="25" Margin="0,0,0,15">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-
-                        <Grid Grid.Column="0" HorizontalAlignment="Left">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-
-                            <TextBlock Text="14:00" Grid.Row="0" Grid.Column="0" FontSize="16" FontWeight="SemiBold" Foreground="#333333" Margin="0,0,0,10"/>
-                            <TextBlock Text="- - - - - - - - - - - - - - -" Grid.Row="0" Grid.Column="1" Foreground="#AAAAAA" VerticalAlignment="Center" Margin="15,0,15,10"/>
-                            <TextBlock Text="19:00" Grid.Row="0" Grid.Column="2" FontSize="16" FontWeight="SemiBold" Foreground="#333333" Margin="0,0,0,10"/>
-
-                            <TextBlock Text="Будапешт" Grid.Row="1" Grid.Column="0" FontSize="14" Foreground="#777777"/>
-                            <TextBlock Text="Прага" Grid.Row="1" Grid.Column="2" FontSize="14" Foreground="#777777"/>
-                        </Grid>
-
-                        <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="0,0,40,0">
-                            <TextBlock Text="1200 грн" FontSize="22" FontWeight="Bold" Foreground="#333333" HorizontalAlignment="Right" Margin="0,0,0,5"/>
-                            <TextBlock Text="4 місця залишилось" FontSize="14" Foreground="#777777" HorizontalAlignment="Right"/>
-                        </StackPanel>
-
-                        <Border Grid.Column="2" Background="#E6E6E6" CornerRadius="10" Width="150" Height="50" VerticalAlignment="Center">
-                            <Button Content="Забронювати" Background="Transparent" BorderThickness="0" FontSize="16" Foreground="#333333"/>
-                        </Border>
-                    </Grid>
-                </Border>
-
-                <Border BorderBrush="#CCCCCC" BorderThickness="1" CornerRadius="10" Padding="25" Margin="0,0,0,15">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-
-                        <Grid Grid.Column="0" HorizontalAlignment="Left">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-
-                            <TextBlock Text="14:00" Grid.Row="0" Grid.Column="0" FontSize="16" FontWeight="SemiBold" Foreground="#333333" Margin="0,0,0,10"/>
-                            <TextBlock Text="- - - - - - - - - - - - - - -" Grid.Row="0" Grid.Column="1" Foreground="#AAAAAA" VerticalAlignment="Center" Margin="15,0,15,10"/>
-                            <TextBlock Text="19:00" Grid.Row="0" Grid.Column="2" FontSize="16" FontWeight="SemiBold" Foreground="#333333" Margin="0,0,0,10"/>
-
-                            <TextBlock Text="Будапешт" Grid.Row="1" Grid.Column="0" FontSize="14" Foreground="#777777"/>
-                            <TextBlock Text="Прага" Grid.Row="1" Grid.Column="2" FontSize="14" Foreground="#777777"/>
-                        </Grid>
-
-                        <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="0,0,40,0">
-                            <TextBlock Text="1200 грн" FontSize="22" FontWeight="Bold" Foreground="#333333" HorizontalAlignment="Right" Margin="0,0,0,5"/>
-                            <TextBlock Text="4 місця залишилось" FontSize="14" Foreground="#777777" HorizontalAlignment="Right"/>
-                        </StackPanel>
-
-                        <Border Grid.Column="2" Background="#E6E6E6" CornerRadius="10" Width="150" Height="50" VerticalAlignment="Center">
-                            <Button Content="Забронювати" Background="Transparent" BorderThickness="0" FontSize="16" Foreground="#333333"/>
-                        </Border>
-                    </Grid>
-                </Border>
-
+                                    <Border Grid.Column="2" Background="#E6E6E6" CornerRadius="10" Width="150" Height="50" VerticalAlignment="Center">
+                                        <Button Content="Забронювати" Click="Book_Click" Background="Transparent" BorderThickness="0" FontSize="16" Foreground="#333333"/>
+                                    </Border>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
             </StackPanel>
         </ScrollViewer>
     </Grid>

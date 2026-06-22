@@ -11,16 +11,40 @@
 
         <Border BorderBrush="#E0E0E0" BorderThickness="0,0,0,1">
             <Grid Margin="40,0">
-                <TextBlock Text="RouteShare" FontSize="22" FontWeight="SemiBold" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="#333333"/>
+                <Button Content="RouteShare" Click="FindTrip_Click" Background="Transparent" BorderThickness="0" FontSize="22" FontWeight="SemiBold" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="#333333" Padding="0" Cursor="Hand"/>
+
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
                     <Border BorderBrush="#CCCCCC" BorderThickness="1" CornerRadius="15" Margin="0,0,10,0">
-                        <Button Content="Знайти поїздку" Background="Transparent" BorderThickness="0" Padding="15,8" Foreground="#555555"/>
+                        <Button Content="Знайти поїздку" Click="FindTrip_Click" Background="Transparent" BorderThickness="0" Padding="15,8" Foreground="#555555"/>
                     </Border>
                     <Border BorderBrush="#CCCCCC" BorderThickness="1" CornerRadius="15">
-                        <Button Content="Управління поїздками" Background="Transparent" BorderThickness="0" Padding="15,8" Foreground="#555555"/>
+                        <Button Content="Управління поїздками" Click="ManageTrips_Click" Background="Transparent" BorderThickness="0" Padding="15,8" Foreground="#555555"/>
                     </Border>
                 </StackPanel>
-                <TextBlock Text="👤" FontSize="28" VerticalAlignment="Center" HorizontalAlignment="Right" Foreground="#333333"/>
+
+                <Grid HorizontalAlignment="Right" VerticalAlignment="Center">
+                    <Border x:Name="UnauthHeader" BorderBrush="#CCCCCC" BorderThickness="1" CornerRadius="15" Visibility="Visible">
+                        <Button Content="Увійти" Click="LoginNav_Click" Background="Transparent" BorderThickness="0" Padding="15,8" Foreground="#555555"/>
+                    </Border>
+
+                    <StackPanel x:Name="AuthHeader" Orientation="Horizontal" Visibility="Collapsed">
+                        <Border BorderBrush="#CCCCCC" BorderThickness="1" CornerRadius="15" Margin="0,0,15,0">
+                            <Button Content="Адмін" Click="Profile_Click" Background="Transparent" BorderThickness="0" Padding="15,8" Foreground="#555555"/>
+                        </Border>
+                        <Button Click="ProfileDropdown_Click" Background="Transparent" BorderThickness="0" Padding="0" Cursor="Hand">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Text="👤" FontSize="28" Foreground="#333333" Margin="0,0,5,0"/>
+                                <TextBlock Text="▼" FontSize="12" Foreground="#333333" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+
+                    <Popup x:Name="LogoutPopup" Placement="Bottom" StaysOpen="False" AllowsTransparency="True" Margin="0,10,0,0">
+                        <Border Background="White" BorderBrush="#CCCCCC" BorderThickness="1" CornerRadius="10" Padding="5">
+                            <Button Content="Вийти" Click="Logout_Click" Background="#E6E6E6" BorderThickness="0" Padding="15,8" Foreground="#333333"/>
+                        </Border>
+                    </Popup>
+                </Grid>
             </Grid>
         </Border>
 
@@ -36,13 +60,11 @@
                     <ColumnDefinition Width="20"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-
                 <Border Grid.Column="0" BorderBrush="#CCCCCC" BorderThickness="1" CornerRadius="10" Height="45">
-                    <Button Content="Завантажити з JSON" Background="Transparent" BorderThickness="0" FontSize="16" Foreground="#333333"/>
+                    <Button Content="Завантажити з JSON" Click="LoadJson_Click" Background="Transparent" BorderThickness="0" FontSize="16" Foreground="#333333"/>
                 </Border>
-
                 <Border Grid.Column="2" BorderBrush="#CCCCCC" BorderThickness="1" CornerRadius="10" Height="45">
-                    <Button Content="Зберегти в JSON" Background="Transparent" BorderThickness="0" FontSize="16" Foreground="#333333"/>
+                    <Button Content="Зберегти в JSON" Click="SaveJson_Click" Background="Transparent" BorderThickness="0" FontSize="16" Foreground="#333333"/>
                 </Border>
             </Grid>
 
@@ -58,90 +80,92 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-
-                        <Border Grid.Column="0" Background="#E6E6E6" CornerRadius="10,0,0,0" BorderBrush="#CCCCCC" BorderThickness="0,0,1,1">
-                            <TextBlock Text="Користувачі" FontSize="18" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#333333"/>
+                        <Border x:Name="UsersTabBorder" Grid.Column="0" Background="#E6E6E6" CornerRadius="10,0,0,0" BorderBrush="#CCCCCC" BorderThickness="0,0,1,1">
+                            <Button Content="Користувачі" Click="ShowUsers_Click" Background="Transparent" BorderThickness="0" FontSize="18" FontWeight="SemiBold" Foreground="#333333"/>
                         </Border>
-
-                        <Border Grid.Column="1" Background="Transparent" CornerRadius="0,10,0,0" BorderBrush="#CCCCCC" BorderThickness="0,0,0,1">
-                            <TextBlock Text="Усі поїздки" FontSize="18" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#555555"/>
+                        <Border x:Name="TripsTabBorder" Grid.Column="1" Background="Transparent" CornerRadius="0,10,0,0" BorderBrush="#CCCCCC" BorderThickness="0,0,0,1">
+                            <Button Content="Усі поїздки" Click="ShowTrips_Click" Background="Transparent" BorderThickness="0" FontSize="18" FontWeight="SemiBold" Foreground="#555555"/>
                         </Border>
                     </Grid>
 
-                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-                        <StackPanel>
+                    <Grid Grid.Row="1">
+                        <ScrollViewer x:Name="UsersContainer" VerticalScrollBarVisibility="Auto">
+                            <ItemsControl x:Name="UsersList">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border BorderBrush="#CCCCCC" BorderThickness="0,0,0,1" Padding="25,15">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="1.5*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="1.5*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="1*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
 
-                            <Border BorderBrush="#CCCCCC" BorderThickness="0,0,0,1" Padding="25,15">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="2*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="3*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="2*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
+                                                <TextBlock Text="{Binding Name}" Grid.Column="0" FontSize="16" Foreground="#333333" VerticalAlignment="Center"/>
 
-                                    <TextBlock Text="1. Андрій Шевченко" Grid.Column="0" FontSize="16" Foreground="#333333" VerticalAlignment="Center"/>
-                                    <Border Grid.Column="1" BorderBrush="#CCCCCC" BorderThickness="1,0,0,0" Margin="15,0"/>
-                                    <TextBlock Text="andriishevschenko@gmail.com" Grid.Column="2" FontSize="16" Foreground="#555555" VerticalAlignment="Center"/>
-                                    <Border Grid.Column="3" BorderBrush="#CCCCCC" BorderThickness="1,0,0,0" Margin="15,0"/>
-                                    <TextBlock Text="Пасажир" Grid.Column="4" FontSize="16" Foreground="#555555" VerticalAlignment="Center"/>
+                                                <Border Grid.Column="1" BorderBrush="#CCCCCC" BorderThickness="1,0,0,0" Margin="15,0"/>
 
-                                    <Border Grid.Column="5" Background="#E6E6E6" CornerRadius="8" Width="140" Height="40">
-                                        <Button Content="Заблокувати" Background="Transparent" BorderThickness="0" FontSize="15" Foreground="#333333"/>
-                                    </Border>
-                                </Grid>
-                            </Border>
+                                                <TextBlock Text="{Binding Email}" Grid.Column="2" FontSize="16" Foreground="#555555" VerticalAlignment="Center" HorizontalAlignment="Center"/>
 
-                            <Border BorderBrush="#CCCCCC" BorderThickness="0,0,0,1" Padding="25,15">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="2*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="3*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="2*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
+                                                <Border Grid.Column="3" BorderBrush="#CCCCCC" BorderThickness="1,0,0,0" Margin="15,0"/>
 
-                                    <TextBlock Text="2. Іван Франко" Grid.Column="0" FontSize="16" Foreground="#333333" VerticalAlignment="Center"/>
-                                    <Border Grid.Column="1" BorderBrush="#CCCCCC" BorderThickness="1,0,0,0" Margin="15,0"/>
-                                    <TextBlock Text="ivanfranko@gmail.com" Grid.Column="2" FontSize="16" Foreground="#555555" VerticalAlignment="Center"/>
-                                    <Border Grid.Column="3" BorderBrush="#CCCCCC" BorderThickness="1,0,0,0" Margin="15,0"/>
-                                    <TextBlock Text="Водій" Grid.Column="4" FontSize="16" Foreground="#555555" VerticalAlignment="Center"/>
+                                                <TextBlock Text="Пасажир" Grid.Column="4" FontSize="16" Foreground="#555555" VerticalAlignment="Center" HorizontalAlignment="Center"/>
 
-                                    <Border Grid.Column="5" Background="#E6E6E6" CornerRadius="8" Width="140" Height="40">
-                                        <Button Content="Заблокувати" Background="Transparent" BorderThickness="0" FontSize="15" Foreground="#333333"/>
-                                    </Border>
-                                </Grid>
-                            </Border>
+                                                <Border Grid.Column="5" Background="#E6E6E6" CornerRadius="8" Width="140" Height="40">
+                                                    <Button Content="Заблокувати" Click="BlockUser_Click" Background="Transparent" BorderThickness="0" FontSize="15" Foreground="#333333"/>
+                                                </Border>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
 
-                            <Border BorderBrush="#CCCCCC" BorderThickness="0,0,0,1" Padding="25,15">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="2*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="3*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="2*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
+                        <ScrollViewer x:Name="TripsContainer" Visibility="Collapsed" VerticalScrollBarVisibility="Auto">
+                            <ItemsControl x:Name="TripsList">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border BorderBrush="#CCCCCC" BorderThickness="0,0,0,1" Padding="25,15">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="2*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="1.5*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="2.5*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
 
-                                    <TextBlock Text="3. Леся Українка" Grid.Column="0" FontSize="16" Foreground="#333333" VerticalAlignment="Center"/>
-                                    <Border Grid.Column="1" BorderBrush="#CCCCCC" BorderThickness="1,0,0,0" Margin="15,0"/>
-                                    <TextBlock Text="lesyaukrainka@gmail.com" Grid.Column="2" FontSize="16" Foreground="#555555" VerticalAlignment="Center"/>
-                                    <Border Grid.Column="3" BorderBrush="#CCCCCC" BorderThickness="1,0,0,0" Margin="15,0"/>
-                                    <TextBlock Text="Пасажир" Grid.Column="4" FontSize="16" Foreground="#555555" VerticalAlignment="Center"/>
+                                                <StackPanel Orientation="Horizontal" Grid.Column="0" VerticalAlignment="Center">
+                                                    <TextBlock Text="{Binding DepartureCity}" FontSize="16" Foreground="#333333"/>
+                                                    <TextBlock Text=" → " FontSize="16" Foreground="#333333" Margin="5,0"/>
+                                                    <TextBlock Text="{Binding ArrivalCity}" FontSize="16" Foreground="#333333"/>
+                                                </StackPanel>
 
-                                    <Border Grid.Column="5" Background="#E6E6E6" CornerRadius="8" Width="140" Height="40">
-                                        <Button Content="Заблокувати" Background="Transparent" BorderThickness="0" FontSize="15" Foreground="#333333"/>
-                                    </Border>
-                                </Grid>
-                            </Border>
+                                                <Border Grid.Column="1" BorderBrush="#CCCCCC" BorderThickness="1,0,0,0" Margin="15,0"/>
 
-                        </StackPanel>
-                    </ScrollViewer>
+                                                <TextBlock Text="{Binding Date, StringFormat=\{0:dd.MM.yyyy\}}" Grid.Column="2" FontSize="16" Foreground="#333333" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+                                                <Border Grid.Column="3" BorderBrush="#CCCCCC" BorderThickness="1,0,0,0" Margin="15,0"/>
+
+                                                <StackPanel Orientation="Horizontal" Grid.Column="4" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                    <TextBlock Text="Водій: " FontSize="16" Foreground="#777777"/>
+                                                    <TextBlock Text="{Binding Driver.Name}" FontSize="16" FontWeight="SemiBold" Foreground="#333333"/>
+                                                </StackPanel>
+
+                                                <Border Grid.Column="5" Background="#E6E6E6" CornerRadius="8" Width="120" Height="40">
+                                                    <Button Content="Видалити" Click="DeleteTrip_Click" Background="Transparent" BorderThickness="0" FontSize="15" Foreground="#333333"/>
+                                                </Border>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </Grid>
                 </Grid>
             </Border>
         </Grid>
